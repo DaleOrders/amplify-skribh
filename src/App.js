@@ -13,10 +13,10 @@ const App = () => {
         return <AudioUpload />;
       case 'patient':
         return <PatientData />;
-      case 'reports':
-        return <Reports />; // This will render the Reports component where TranscriptProcessor is included
       case 'transcript':
         return <TranscriptViewer />;
+      case 'reports':
+        return <Reports />;
       default:
         return <AudioUpload />;
     }
