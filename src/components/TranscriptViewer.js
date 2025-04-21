@@ -8,22 +8,22 @@ export default function TranscriptViewer() {
   useEffect(() => {
     const fetchTranscript = async () => {
       try {
-        // Initialize the S3 client
+        console.log('Initializing S3 client...');
         const s3 = new AWS.S3();
-        
-        // Define your S3 bucket name and prefix for transcripts
+
         const bucketName = 'amplifyskribhupload07344-dev'; // Replace with your bucket name
         const prefix = 'transcripts/';
 
-        // List the objects in the "transcripts" folder
+        console.log('Listing objects in the transcripts folder...');
         const params = {
           Bucket: bucketName,
           Prefix: prefix,
         };
 
         const data = await s3.listObjectsV2(params).promise();
+        console.log('Objects in transcripts folder:', data);
 
-        if (data.Contents.length === 0) {
+        if (!data.Contents || data.Contents.length === 0) {
           throw new Error('No transcripts found.');
         }
 
@@ -31,18 +31,26 @@ export default function TranscriptViewer() {
         const latestTranscript = data.Contents.sort(
           (a, b) => new Date(b.LastModified) - new Date(a.LastModified)
         )[0];
+        console.log('Latest transcript file:', latestTranscript);
 
-        // Retrieve the transcript file
         const transcriptParams = {
           Bucket: bucketName,
           Key: latestTranscript.Key,
         };
 
+        console.log('Fetching transcript file:', transcriptParams);
         const fileData = await s3.getObject(transcriptParams).promise();
+        console.log('Transcript file data:', fileData);
 
-        // Parse the JSON content of the file
-        const transcriptText = JSON.parse(fileData.Body.toString());
-        setTranscript(transcriptText.results.transcripts[0].transcript);
+        // Parse the transcript JSON
+        const transcriptJson = JSON.parse(fileData.Body.toString());
+        console.log('Parsed transcript JSON:', transcriptJson);
+
+        // Extract the transcript text
+        const transcriptText = transcriptJson.results.transcripts[0].transcript;
+        console.log('Extracted transcript:', transcriptText);
+
+        setTranscript(transcriptText);
       } catch (err) {
         console.error('Error fetching transcript:', err);
         setError('Error loading transcript');
@@ -53,13 +61,9 @@ export default function TranscriptViewer() {
   }, []);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Transcript</h2>
-      {error ? (
-        <p style={{ color: 'red' }}>{error}</p>
-      ) : (
-        <p>{transcript}</p>
-      )}
+    <div>
+      <h2>Transcript Viewer</h2>
+      {error ? <p style={{ color: 'red' }}>{error}</p> : <p>{transcript}</p>}
     </div>
   );
 }
