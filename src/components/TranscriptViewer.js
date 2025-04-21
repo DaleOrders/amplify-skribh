@@ -11,7 +11,7 @@ export default function TranscriptViewer() {
         console.log('Initializing S3 client...');
         const s3 = new AWS.S3();
 
-        const bucketName = 'amplifyskribhupload07344-dev'; // Replace with your bucket name
+        const bucketName = 'amplifyskribhupload07344-dev';
         const prefix = 'transcripts/';
 
         console.log('Listing objects in the transcripts folder...');
