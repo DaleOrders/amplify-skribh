@@ -9,7 +9,7 @@ const TranscriptProcessor = () => {
   const [error, setError] = useState(null);
 
   // API Gateway URL
-  const apiUrl = 'https://a0cyakdqr4.execute-api.us-west-2.amazonaws.com/dev'; // Replace with your actual API Gateway URL
+  const apiUrl = 'https://a0cyakdqr4.execute-api.us-west-2.amazonaws.com/dev/process-transcript'; // Replace with your actual API Gateway URL
 
   // Function to fetch data from the Lambda function via API Gateway
   const fetchProcessedData = async () => {
