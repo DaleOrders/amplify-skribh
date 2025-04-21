@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
-// Uncomment this when Storage is correctly working
-// import { uploadData } from '@aws-amplify/storage';
+import AWS from 'aws-sdk';
 
 const AudioUpload = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  // Configure AWS SDK
+  AWS.config.update({
+    region: 'us-west-2', // Replace with your S3 bucket region
+    credentials: new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: 'us-west-2:9badc0ef-aaa1-4eed-ab0e-99a7a11c4a16', // Replace with your Cognito Identity Pool ID
+    }),
+  });
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -22,26 +29,28 @@ const AudioUpload = () => {
     try {
       setUploading(true);
 
-      // Uncomment and configure this when Storage is working
-      /*
-      const result = await uploadData({
-        key: file.name,
-        data: file,
-        options: {
-          contentType: file.type,
-        },
-      }).result;
+      // Initialize the S3 client
+      const s3 = new AWS.S3();
 
-      console.log('Upload success:', result);
-      alert('File uploaded successfully!');
-      */
+      // Upload the file to S3
+      const params = {
+        Bucket: 'amplifyskribhupload07344-dev', // Replace with your S3 bucket name
+        Key: file.name, // The file name
+        Body: file, // The file content
+        ContentType: file.type, // The file MIME type
+      };
 
-      // Placeholder for now
-      setTimeout(() => {
-        alert(`Pretending to upload: ${file.name}`);
+      s3.upload(params, (err, data) => {
+        if (err) {
+          console.error('Upload error:', err);
+          alert('There was an error uploading the file.');
+        } else {
+          console.log('Upload success:', data);
+          alert('File uploaded successfully!');
+        }
         setUploading(false);
         setFile(null);
-      }, 1000);
+      });
     } catch (err) {
       console.error('Upload error:', err);
       alert('There was an error uploading the file.');
@@ -62,7 +71,6 @@ const AudioUpload = () => {
 };
 
 export default AudioUpload;
-
 
 
 
