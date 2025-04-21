@@ -36,6 +36,14 @@ const AudioUpload = () => {
       setUploading(true);
       console.log('Starting file upload...');
 
+      // Explicitly refresh AWS credentials
+      const credentials = AWS.config.credentials;
+      if (credentials instanceof AWS.CognitoIdentityCredentials) {
+        console.log('Refreshing AWS credentials...');
+        await credentials.getPromise(); // Refresh credentials
+        console.log('AWS credentials refreshed:', credentials);
+      }
+
       // Initialize the S3 client
       const s3 = new AWS.S3();
       console.log('S3 client initialized.');
