@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AudioUpload from './AudioUpload';
 import PatientData from './PatientData';
-import Reports from './Reports';
+import Reports from './Reports'; // Import the Reports component
 import TranscriptViewer from './components/TranscriptViewer';
 
 const App = () => {
@@ -14,7 +14,7 @@ const App = () => {
       case 'patient':
         return <PatientData />;
       case 'reports':
-        return <Reports />;
+        return <Reports />; // This will render the Reports component where TranscriptProcessor is included
       case 'transcript':
         return <TranscriptViewer />;
       default:
@@ -33,13 +33,13 @@ const App = () => {
       <nav style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
         <button onClick={() => setActiveTab('upload')}>Audio Upload</button>
         <button onClick={() => setActiveTab('patient')}>Patient Data</button>
-        <button onClick={() => setActiveTab('reports')}>Reports</button>
+        <button onClick={() => setActiveTab('reports')}>Reports</button> {/* This will show the Reports section */}
         <button onClick={() => setActiveTab('transcript')}>Transcript</button>
       </nav>
 
       {/* Active Tab Content */}
       <main style={{ padding: '20px' }}>
-        {renderTab()}
+        {renderTab()} {/* Renders the active tab content */}
       </main>
 
       {/* Footer */}
